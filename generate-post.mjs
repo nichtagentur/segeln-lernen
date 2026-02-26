@@ -145,7 +145,7 @@ async function writeArticle(topic) {
 
   const response = await anthropic.messages.create({
     model: 'claude-sonnet-4-20250514',
-    max_tokens: 4096,
+    max_tokens: 8192,
     messages: [{
       role: 'user',
       content: `Du bist Kapitaen Hannes, ein erfahrener Segellehrer mit 20+ Jahren Erfahrung. Du schreibst fuer deinen Blog "Segeln Lernen".
@@ -194,10 +194,40 @@ Antworte NUR mit einem JSON-Objekt:
   });
 
   const text = response.content[0].text;
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('Konnte kein JSON aus Artikel extrahieren');
 
-  const article = JSON.parse(jsonMatch[0]);
+  // Robust JSON extraction -- handle truncated or malformed JSON
+  let article;
+  try {
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Kein JSON gefunden');
+    article = JSON.parse(jsonMatch[0]);
+  } catch (parseErr) {
+    log(`JSON-Parse fehlgeschlagen, versuche Reparatur: ${parseErr.message}`);
+    // Try to extract fields manually
+    const contentMatch = text.match(/"content"\s*:\s*"([\s\S]*?)(?:"\s*,\s*"faq|"\s*,\s*"image_alt|"\s*\})/);
+    const faqMatch = text.match(/"faq"\s*:\s*\[([\s\S]*?)\]/);
+    const altMatch = text.match(/"image_alt"\s*:\s*"([\s\S]*?)"/);
+
+    if (!contentMatch) throw new Error('Konnte content-Feld nicht extrahieren');
+
+    let content = contentMatch[1];
+    // Unescape JSON string escapes
+    content = content.replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+
+    let faq = [];
+    if (faqMatch) {
+      try {
+        faq = JSON.parse('[' + faqMatch[1] + ']');
+      } catch { faq = []; }
+    }
+
+    article = {
+      content: content,
+      faq: faq,
+      image_alt: altMatch ? altMatch[1] : ''
+    };
+  }
+
   log(`Artikel geschrieben: ${article.content.split(/\s+/).length} Woerter`);
   return article;
 }
