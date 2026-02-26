@@ -34,7 +34,7 @@ const SMTP_HOST = 'mail.easyname.eu';
 const SMTP_PORT = 587;
 const SMTP_USER = 'i-am-a-user@nichtagentur.at';
 const SMTP_PASS = process.env.EMAIL_PASSWORD || 'i_am_an_AI_password_2026';
-const NOTIFY_EMAIL = 'keller@blaugrau.at';
+const NOTIFY_EMAIL = 'hanneskeller@me.com';
 
 if (!ANTHROPIC_KEY) {
   console.error('ERROR: Kein Anthropic API Key gefunden. Bitte CLAUDE_API_KEY_1 setzen.');

@@ -106,5 +106,40 @@
     "readTime": 5,
     "imageAlt": "Einsamer Segler im Cockpit seiner Yacht bei winterlichen Bedingungen auf der Ostsee mit schneebedecktem Deck",
     "contentType": "geschichte"
+  },
+  {
+    "slug": "ankern-lernen-anleitung-fuer-segler",
+    "title": "Ankern lernen: Anleitung für Segler",
+    "metaDescription": "Lerne wie du richtig ankerst. Schritt-für-Schritt Anleitung für sichere Ankerplätze, die richtige Ankertechnik und wichtige Sicherheitsregeln.",
+    "category": "grundlagen",
+    "keywords": [
+      "ankern",
+      "anker setzen",
+      "ankertechnik",
+      "segelgrundlagen"
+    ],
+    "dateISO": "2026-02-26",
+    "dateDisplay": "26. Februar 2026",
+    "readTime": 4,
+    "imageAlt": "Segelboot beim Ankern in ruhiger Bucht mit ausgebrachter Ankerkette",
+    "contentType": "ratgeber"
+  },
+  {
+    "slug": "kielboote-vs-schwertzboote-der-februar-test",
+    "title": "Kielboote vs. Schwertzboote: Der Februar-Test",
+    "metaDescription": "Kielboote oder Schwertzboote im Februar? Wir vergleichen beide Bootstypen für Ostsee-Törns: Handling, Sicherheit, Performance bei Winterwetter.",
+    "category": "boote",
+    "keywords": [
+      "Kielboot vs Schwertzboot",
+      "Februarsegelr Ostsee",
+      "Wintersegelboot Test",
+      "Schwertzboot Winter",
+      "Segelboot Vergleich Februar"
+    ],
+    "dateISO": "2026-02-26",
+    "dateDisplay": "26. Februar 2026",
+    "readTime": 5,
+    "imageAlt": "Kielboot und Schwertboot im verschneiten Winterhafen an der Ostsee bei eisigen Temperaturen",
+    "contentType": "boots-review"
   }
 ]

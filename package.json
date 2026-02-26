@@ -5,12 +5,14 @@
   "description": "Vollautomatisierter AI Segel-Blog mit Fact-Checking, Qualitaetskontrolle und E-Mail-Benachrichtigung",
   "scripts": {
     "post": "node generate-post.mjs",
+    "assistant": "node email-assistant.mjs",
     "auto": "crontab -l 2>/dev/null | grep -v 'generate-post' | { cat; echo '0 * * * * cd /home/student/Projects/segeln-lernen && source /home/student/.env && /usr/bin/node generate-post.mjs >> /home/student/Projects/segeln-lernen/data/cron.log 2>&1'; } | crontab - && echo 'Cron aktiviert: 2 Artikel pro Stunde'",
     "stop": "crontab -l 2>/dev/null | grep -v 'generate-post' | crontab - && echo 'Cron gestoppt'",
     "preview": "npx serve docs -p 3000"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
+    "imapflow": "^1.2.10",
     "nodemailer": "^6.10.1",
     "openai": "^4.80.0"
   }
