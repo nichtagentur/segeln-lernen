@@ -559,80 +559,17 @@ function buildSourcesHTML(sources) {
 }
 
 // ============================================================
-// STEP 7: Generate Image (Imagen 3 / Gemini / DALL-E 3)
+// STEP 7: Generate Image (Nano Banana Pro -> DALL-E 3)
 // ============================================================
 async function generateImage(topic, outputDir) {
   log('Generiere Hero-Bild...');
 
   const photoPrompt = `A real photograph by a professional marine photographer. ${topic.image_prompt}. Shot on Canon EOS R5, natural golden hour lighting, crisp detail, editorial quality for Yacht magazine. Absolutely photorealistic, authentic ocean colors, natural marine atmosphere. Wide landscape 16:9.`;
 
-  // Try Imagen 3 (nano banana) with retry
+  // Primary: Nano Banana Pro (Gemini 3 Pro Image)
   if (GEMINI_KEY) {
-    for (let attempt = 0; attempt < 2; attempt++) {
-      try {
-        const prompt = attempt === 0 ? photoPrompt : `Professional sailing photograph: ${topic.image_prompt}. Photorealistic, natural colors, 16:9 landscape.`;
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${GEMINI_KEY}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              instances: [{ prompt }],
-              parameters: {
-                sampleCount: 1,
-                aspectRatio: '16:9',
-                personGeneration: 'allow_adult'
-              }
-            })
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data.predictions?.[0]?.bytesBase64Encoded) {
-            const buffer = Buffer.from(data.predictions[0].bytesBase64Encoded, 'base64');
-            fs.writeFileSync(path.join(outputDir, 'hero.webp'), buffer);
-            log(`Bild generiert (Imagen 3${attempt > 0 ? ', Retry' : ''})`);
-            return true;
-          }
-        }
-        if (attempt === 0) log('Imagen 3: Erster Versuch fehlgeschlagen, retry...');
-      } catch (e) {
-        if (attempt === 0) log(`Imagen 3 Fehler: ${e.message}, retry...`);
-      }
-    }
-
-    // Fallback: Gemini native image gen
-    try {
-      const response2 = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: photoPrompt }] }],
-            generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
-          })
-        }
-      );
-
-      if (response2.ok) {
-        const data = await response2.json();
-        if (data.candidates?.[0]?.content?.parts) {
-          for (const part of data.candidates[0].content.parts) {
-            if (part.inlineData) {
-              const buffer = Buffer.from(part.inlineData.data, 'base64');
-              fs.writeFileSync(path.join(outputDir, 'hero.webp'), buffer);
-              log('Bild generiert (Gemini Flash)');
-              return true;
-            }
-          }
-        }
-      }
-      log('Gemini: Kein Bild generiert, versuche DALL-E...');
-    } catch (e) {
-      log(`Gemini fehlgeschlagen: ${e.message}`);
-    }
+    const generated = await generateWithNanoBananaPro(photoPrompt, path.join(outputDir, 'hero.webp'));
+    if (generated) return true;
   }
 
   // Fallback: DALL-E 3
@@ -640,31 +577,64 @@ async function generateImage(topic, outputDir) {
     try {
       const { default: OpenAI } = await import('openai');
       const openai = new OpenAI({ apiKey: OPENAI_KEY });
-
       const imgResponse = await openai.images.generate({
-        model: 'dall-e-3',
-        prompt: photoPrompt,
-        n: 1,
-        size: '1792x1024',
-        quality: 'hd',
-        style: 'natural'
+        model: 'dall-e-3', prompt: photoPrompt, n: 1, size: '1792x1024', quality: 'hd', style: 'natural'
       });
-
-      const imageUrl = imgResponse.data[0].url;
-      const imgFetch = await fetch(imageUrl);
-      const buffer = Buffer.from(await imgFetch.arrayBuffer());
-      fs.writeFileSync(path.join(outputDir, 'hero.webp'), buffer);
-      log('Bild generiert (DALL-E 3)');
+      const imgFetch = await fetch(imgResponse.data[0].url);
+      fs.writeFileSync(path.join(outputDir, 'hero.webp'), Buffer.from(await imgFetch.arrayBuffer()));
+      log('Bild generiert (DALL-E 3 Fallback)');
       return true;
-    } catch (e) {
-      log(`DALL-E 3 fehlgeschlagen: ${e.message}`);
-    }
+    } catch (e) { log(`DALL-E 3 fehlgeschlagen: ${e.message}`); }
   }
 
-  // Final fallback: Placeholder
   log('Erstelle Platzhalter-Bild...');
   createPlaceholderImage(outputDir);
   return true;
+}
+
+// Nano Banana Pro image generation helper (reusable)
+async function generateWithNanoBananaPro(prompt, outputPath) {
+  // Try Nano Banana Pro (gemini-3-pro-image-preview) first, then Nano Banana (gemini-2.5-flash)
+  const models = ['gemini-3-pro-image-preview', 'gemini-2.5-flash-image'];
+  for (const model of models) {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseModalities: ['TEXT', 'IMAGE'],
+              imageConfig: { aspectRatio: '16:9' }
+            }
+          })
+        }
+      );
+
+      if (!response.ok) {
+        const errText = await response.text();
+        log(`${model}: HTTP ${response.status} - ${errText.substring(0, 100)}`);
+        continue;
+      }
+
+      const data = await response.json();
+      if (data.candidates?.[0]?.content?.parts) {
+        for (const part of data.candidates[0].content.parts) {
+          if (part.inlineData?.data) {
+            fs.writeFileSync(outputPath, Buffer.from(part.inlineData.data, 'base64'));
+            log(`Bild generiert (${model})`);
+            return true;
+          }
+        }
+      }
+      log(`${model}: Kein Bild in Antwort`);
+    } catch (e) {
+      log(`${model} Fehler: ${e.message}`);
+    }
+  }
+  return false;
 }
 
 function createPlaceholderImage(outputDir) {

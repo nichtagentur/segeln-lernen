@@ -106,3 +106,59 @@ Schreib mir einen neuen Beitrag Ã¼ber nÃ¼tzliche Tools zum S..."
 Perfekt. Mach jetzt einen Art= ikel zum Thema =E2=8..."
 [12:39:17] Aktion: edit_post
 [12:39:19] E-Mail gesendet an hanneskeller@me.com: Bearbeite: Segelwerkzeuge & Ausrüstung: Kabelbinder, Messer & Co.
+[12:40:39] E-Mail gesendet an hanneskeller@me.com: Fertig bearbeitet: Segelwerkzeuge & Ausrüstung: Kabelbinder, Messer & Co.
+[12:40:39] Artikel bearbeitet: Segelwerkzeuge & Ausrüstung: Kabelbinder, Messer & Co.
+[12:45:18] Heartbeat: 10 Checks, 3 verarbeitete E-Mails
+[12:50:27] Heartbeat: 20 Checks, 3 verarbeitete E-Mails
+file:///home/student/Projects/segeln-lernen/email-assistant.mjs:524
+  const GEMINI_KEY = process.env.GEMINI_API_KEY;
+        ^
+
+SyntaxError: Identifier 'GEMINI_KEY' has already been declared
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:107:18)
+    at #translate (node:internal/modules/esm/loader:546:20)
+    at afterLoad (node:internal/modules/esm/loader:596:29)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:601:12)
+    at #createModuleJob (node:internal/modules/esm/loader:624:36)
+    at #getJobFromResolveResult (node:internal/modules/esm/loader:343:34)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:311:41)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:664:25)
+
+Node.js v22.22.0
+file:///home/student/Projects/segeln-lernen/email-assistant.mjs:524
+  const GEMINI_KEY = process.env.GEMINI_API_KEY;
+        ^
+
+SyntaxError: Identifier 'GEMINI_KEY' has already been declared
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:107:18)
+    at #translate (node:internal/modules/esm/loader:546:20)
+    at afterLoad (node:internal/modules/esm/loader:596:29)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:601:12)
+    at #createModuleJob (node:internal/modules/esm/loader:624:36)
+    at #getJobFromResolveResult (node:internal/modules/esm/loader:343:34)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:311:41)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:664:25)
+
+Node.js v22.22.0
+--- NEUSTART Thu Feb 26 01:23:46 PM UTC 2026 - FIX GEMINI_KEY doppelt ---
+
+===========================================
+  SEGELN LERNEN -- AI E-Mail Assistent
+  26.2.2026, 13:23:46
+  Pruefe E-Mails alle 30s (INBOX + Junk)
+  Akzeptiere nur: hanneskeller@me.com
+===========================================
+
+[13:23:50] E-Mail gesendet an hanneskeller@me.com: AI Assistent ist online!
+[13:23:50] Neue E-Mail von hanneskeller@me.com: "Neuer Beitrag Segel-Anfänger " [INBOX]
+[13:23:54] E-Mail gesendet an hanneskeller@me.com: Empfangen: "Neuer Beitrag Segel-Anfänger "
+[13:23:54] Empfangsbestaetigung gesendet an hanneskeller@me.com
+[13:23:54] Verarbeite: "Neuer Beitrag Segel-Anfänger 
+Schreibe einen Beitrag Ã¼ber Raffi den segelanfÃ¤n..."
+[13:23:56] Aktion: new_post
+[13:23:58] E-Mail gesendet an hanneskeller@me.com: Wird erstellt: Anfängerfehler beim Segeln: Lektionen von Raffi in Trogir
+[13:23:58] Generiere Artikel zum Thema: Anfängerfehler beim Segeln: Lektionen von Raffi in Trogir
+[13:25:22] Bild generiert (gemini-3-pro-image-preview)
+[13:25:22] Index rebuilt: 10 Posts

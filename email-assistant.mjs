@@ -396,6 +396,44 @@ function loadJSON(filepath) {
   catch { return []; }
 }
 
+// --- Nano Banana Pro image generation ---
+async function generateNanoBanana(prompt, outputPath, geminiKey) {
+  const models = ['gemini-3-pro-image-preview', 'gemini-2.5-flash-image'];
+  for (const model of models) {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseModalities: ['TEXT', 'IMAGE'],
+              imageConfig: { aspectRatio: '16:9' }
+            }
+          })
+        }
+      );
+      if (!response.ok) {
+        log(`${model}: HTTP ${response.status}`);
+        continue;
+      }
+      const data = await response.json();
+      if (data.candidates?.[0]?.content?.parts) {
+        for (const part of data.candidates[0].content.parts) {
+          if (part.inlineData?.data) {
+            fs.writeFileSync(outputPath, Buffer.from(part.inlineData.data, 'base64'));
+            log(`Bild generiert (${model})`);
+            return true;
+          }
+        }
+      }
+    } catch (e) { log(`${model} Fehler: ${e.message}`); }
+  }
+  return false;
+}
+
 // --- Single Post Generator (for email commands) ---
 async function generateSinglePost(forcedTopic) {
   log(`Generiere Artikel zum Thema: ${forcedTopic}`);
@@ -478,14 +516,17 @@ Antworte NUR mit JSON:
     article = { content: articleResponse.content[0].text, faq: [], image_alt: topicJson.title };
   }
 
-  // Step 3: Generate image
+  // Step 3: Generate image (Nano Banana Pro)
   const postDir = path.join(DOCS, 'posts', topicJson.slug);
   fs.mkdirSync(postDir, { recursive: true });
 
-  const photoPrompt = `Professional marine photograph: ${topicJson.image_prompt}. Canon EOS R5, natural lighting, editorial quality. Photorealistic. 16:9 landscape.`;
+  const photoPrompt = `A real photograph by a professional marine photographer. ${topicJson.image_prompt}. Shot on Canon EOS R5, natural golden hour lighting, editorial quality for Yacht magazine. Photorealistic, authentic ocean colors. Wide landscape 16:9.`;
 
   let imageGenerated = false;
-  if (OPENAI_KEY) {
+  if (GEMINI_KEY) {
+    imageGenerated = await generateNanoBanana(photoPrompt, path.join(postDir, 'hero.webp'), GEMINI_KEY);
+  }
+  if (!imageGenerated && OPENAI_KEY) {
     try {
       const { default: OpenAI } = await import('openai');
       const openai = new OpenAI({ apiKey: OPENAI_KEY });
@@ -495,12 +536,10 @@ Antworte NUR mit JSON:
       const imgFetch = await fetch(imgResponse.data[0].url);
       fs.writeFileSync(path.join(postDir, 'hero.webp'), Buffer.from(await imgFetch.arrayBuffer()));
       imageGenerated = true;
-      log('Bild generiert');
-    } catch (e) { log(`Bild-Fehler: ${e.message}`); }
+      log('Bild generiert (DALL-E 3 Fallback)');
+    } catch (e) { log(`DALL-E Fehler: ${e.message}`); }
   }
-
   if (!imageGenerated) {
-    // Placeholder
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><rect width="1600" height="900" fill="#0077b6"/></svg>`;
     fs.writeFileSync(path.join(postDir, 'hero.webp'), svg);
   }
