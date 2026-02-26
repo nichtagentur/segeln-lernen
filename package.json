@@ -1,0 +1,14 @@
+{
+  "name": "segeln-lernen",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Automatisierter AI Segel-Blog mit Fresh & Coastal Design",
+  "scripts": {
+    "post": "node generate-post.mjs",
+    "preview": "npx serve docs -p 3000"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "openai": "^4.80.0"
+  }
+}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Segeln Lernen -- Dein Ratgeber fuer Wind und Wellen</title>
+  <meta name="description" content="Segeln lernen mit Kapitaen Hannes: Praxistipps, Revierguides, Bootsreviews und Segelwissen. Von erfahrenen Seglern fuer Einsteiger und Fortgeschrittene.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://nichtagentur.github.io/segeln-lernen/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Segeln Lernen -- Dein Ratgeber fuer Wind und Wellen">
+  <meta property="og:description" content="Praxistipps, Revierguides und Segelwissen von Kapitaen Hannes. Fuer Einsteiger und Fortgeschrittene.">
+  <meta property="og:url" content="https://nichtagentur.github.io/segeln-lernen/">
+  <meta property="og:site_name" content="Segeln Lernen">
+  <meta property="og:locale" content="de_DE">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Segeln Lernen -- Dein Ratgeber fuer Wind und Wellen">
+  <meta name="twitter:description" content="Praxistipps, Revierguides und Segelwissen von Kapitaen Hannes.">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Segeln Lernen",
+    "url": "https://nichtagentur.github.io/segeln-lernen/",
+    "description": "Segeln lernen mit Kapitaen Hannes: Praxistipps, Revierguides und Segelwissen.",
+    "publisher": {
+      "@type": "Person",
+      "name": "Kapitaen Hannes",
+      "description": "Segellehrer mit 20+ Jahren Erfahrung"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="{{BASE_URL}}/css/style.css">
+</head>
+<body>
+  <div class="progress-bar"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="{{BASE_URL}}/" class="nav-logo">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 4 L16 28 M16 4 C16 4 28 12 28 20 L16 20" fill="none"/>
+          <path d="M4 28 L28 28" stroke-linecap="round"/>
+        </svg>
+        Segeln Lernen
+      </a>
+      <ul class="nav-links">
+        <li><a href="{{BASE_URL}}/">Start</a></li>
+        <li><a href="{{BASE_URL}}/kategorie/grundlagen/">Grundlagen</a></li>
+        <li><a href="{{BASE_URL}}/kategorie/reviere/">Reviere</a></li>
+        <li><a href="{{BASE_URL}}/kategorie/boote/">Boote</a></li>
+        <li><a href="{{BASE_URL}}/kategorie/wissen/">Wissen</a></li>
+        <li><a href="{{BASE_URL}}/about/">Ueber mich</a></li>
+        <li><button class="theme-toggle" aria-label="Design wechseln"></button></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <canvas class="wave-canvas"></canvas>
+    <div class="hero-content">
+      <h1>Segeln lernen mit Leidenschaft</h1>
+      <p>Praxistipps, Revierguides und Segelwissen von Kapitaen Hannes -- fuer alle, die den Wind im Haar und das Meer im Herzen tragen.</p>
+      <a href="#posts" class="hero-cta">Neueste Artikel entdecken &darr;</a>
+    </div>
+  </section>
+
+  <!-- Wave Divider -->
+  <div class="wave-divider">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+      <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,40 1440,40 L1440,80 L0,80 Z" fill="var(--bg)"/>
+    </svg>
+  </div>
+
+  <!-- Posts Section -->
+  <main class="section" id="posts">
+    <h2 class="section-title">Neueste Artikel</h2>
+    <p class="section-subtitle">Frisches Segelwissen direkt auf deinen Bildschirm</p>
+
+    <div class="card-grid">
+      {{POST_CARDS}}
+    </div>
+  </main>
+
+  <!-- Categories Section -->
+  <section style="background: var(--bg-alt); padding: 60px 0;">
+    <div class="section" style="padding-top: 0; padding-bottom: 0;">
+      <h2 class="section-title" style="text-align: center;">Themen erkunden</h2>
+      <p class="section-subtitle" style="text-align: center;">Finde genau das Segelwissen, das du suchst</p>
+      <div class="card-grid" style="grid-template-columns: repeat(3, 1fr);">
+        {{CATEGORY_CARDS}}
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <h3>Segeln Lernen</h3>
+        <p>Dein Ratgeber fuer Wind und Wellen. Geschrieben von Kapitaen Hannes mit ueber 20 Jahren Segelerfahrung auf allen Weltmeeren.</p>
+        <p style="margin-top: 12px; font-size: 0.82rem; opacity: 0.6;">Redaktionell mit KI-Unterstuetzung erstellt und von erfahrenen Seglern geprueft.</p>
+      </div>
+      <div>
+        <h3>Kategorien</h3>
+        <ul class="footer-links">
+          <li><a href="{{BASE_URL}}/kategorie/grundlagen/">Grundlagen</a></li>
+          <li><a href="{{BASE_URL}}/kategorie/reviere/">Reviere</a></li>
+          <li><a href="{{BASE_URL}}/kategorie/boote/">Boote</a></li>
+          <li><a href="{{BASE_URL}}/kategorie/ausruestung/">Ausruestung</a></li>
+          <li><a href="{{BASE_URL}}/kategorie/wissen/">Wissen</a></li>
+          <li><a href="{{BASE_URL}}/kategorie/geschichten/">Geschichten</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Mehr</h3>
+        <ul class="footer-links">
+          <li><a href="{{BASE_URL}}/about/">Ueber Kapitaen Hannes</a></li>
+          <li><a href="{{BASE_URL}}/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; {{YEAR}} Segeln Lernen. Alle Rechte vorbehalten.
+    </div>
+  </footer>
+
+  <button class="scroll-top" aria-label="Nach oben scrollen">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <script src="{{BASE_URL}}/js/waves.js"></script>
+  <script src="{{BASE_URL}}/js/widgets.js"></script>
+</body>
+</html>

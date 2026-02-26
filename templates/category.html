@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{CATEGORY}} -- Segeln Lernen</title>
+  <meta name="description" content="{{CATEGORY_DESCRIPTION}}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://nichtagentur.github.io/segeln-lernen/kategorie/{{CATEGORY_SLUG}}/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{CATEGORY}} -- Segeln Lernen">
+  <meta property="og:description" content="{{CATEGORY_DESCRIPTION}}">
+  <link rel="stylesheet" href="{{BASE_URL}}/css/style.css">
+</head>
+<body>
+  <div class="progress-bar"></div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="{{BASE_URL}}/" class="nav-logo">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 4 L16 28 M16 4 C16 4 28 12 28 20 L16 20" fill="none"/>
+          <path d="M4 28 L28 28" stroke-linecap="round"/>
+        </svg>
+        Segeln Lernen
+      </a>
+      <ul class="nav-links">
+        <li><a href="{{BASE_URL}}/">Start</a></li>
+        <li><a href="{{BASE_URL}}/kategorie/grundlagen/">Grundlagen</a></li>
+        <li><a href="{{BASE_URL}}/kategorie/reviere/">Reviere</a></li>
+        <li><a href="{{BASE_URL}}/kategorie/boote/">Boote</a></li>
+        <li><a href="{{BASE_URL}}/kategorie/wissen/">Wissen</a></li>
+        <li><a href="{{BASE_URL}}/about/">Ueber mich</a></li>
+        <li><button class="theme-toggle" aria-label="Design wechseln"></button></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="category-header">
+    <h1>{{CATEGORY}}</h1>
+    <p style="color: var(--text-light); margin-top: 8px;">{{CATEGORY_DESCRIPTION}}</p>
+  </div>
+
+  <div class="breadcrumbs" style="max-width: var(--max-width);">
+    <a href="{{BASE_URL}}/">Start</a>
+    <span>&rsaquo;</span>
+    {{CATEGORY}}
+  </div>
+
+  <main class="section">
+    <div class="card-grid">
+      {{POST_CARDS}}
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <h3>Segeln Lernen</h3>
+        <p>Dein Ratgeber fuer Wind und Wellen.</p>
+        <p style="margin-top: 12px; font-size: 0.82rem; opacity: 0.6;">Redaktionell mit KI-Unterstuetzung erstellt und von erfahrenen Seglern geprueft.</p>
+      </div>
+      <div>
+        <h3>Kategorien</h3>
+        <ul class="footer-links">
+          <li><a href="{{BASE_URL}}/kategorie/grundlagen/">Grundlagen</a></li>
+          <li><a href="{{BASE_URL}}/kategorie/reviere/">Reviere</a></li>
+          <li><a href="{{BASE_URL}}/kategorie/boote/">Boote</a></li>
+          <li><a href="{{BASE_URL}}/kategorie/ausruestung/">Ausruestung</a></li>
+          <li><a href="{{BASE_URL}}/kategorie/wissen/">Wissen</a></li>
+          <li><a href="{{BASE_URL}}/kategorie/geschichten/">Geschichten</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Mehr</h3>
+        <ul class="footer-links">
+          <li><a href="{{BASE_URL}}/about/">Ueber Kapitaen Hannes</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; {{YEAR}} Segeln Lernen. Alle Rechte vorbehalten.</div>
+  </footer>
+
+  <button class="scroll-top" aria-label="Nach oben scrollen">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <script src="{{BASE_URL}}/js/widgets.js"></script>
+</body>
+</html>
