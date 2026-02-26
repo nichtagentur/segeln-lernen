@@ -236,27 +236,22 @@ Antworte NUR mit einem JSON-Objekt:
 async function generateImage(topic, outputDir) {
   log('Generiere Hero-Bild...');
 
-  // Try Gemini first
+  const photoPrompt = `A real photograph taken by a professional sailing photographer. ${topic.image_prompt}. Shot on a DSLR camera, natural lighting, shallow depth of field, editorial magazine quality. Looks like it belongs in Boat International or Yacht magazine. Absolutely photorealistic, NOT illustrated, NOT AI-looking, NOT oversaturated. Natural ocean colors, authentic marine atmosphere. Wide landscape format 16:9.`;
+
+  // Try Gemini Imagen (nano banana / imagen-3)
   if (GEMINI_KEY) {
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${GEMINI_KEY}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `Generate a beautiful, photorealistic image for a sailing blog article. The image should be:
-- Wide format (16:9 aspect ratio)
-- ${topic.image_prompt}
-- Bright, coastal colors (ocean blue, white, golden hour light)
-- Professional quality, magazine-style photography
-- No text overlays`
-              }]
-            }],
-            generationConfig: {
-              responseModalities: ['TEXT', 'IMAGE']
+            instances: [{ prompt: photoPrompt }],
+            parameters: {
+              sampleCount: 1,
+              aspectRatio: '16:9',
+              personGeneration: 'allow_adult'
             }
           })
         }
@@ -264,19 +259,41 @@ async function generateImage(topic, outputDir) {
 
       if (response.ok) {
         const data = await response.json();
-        // Look for inline image data in response
+        if (data.predictions?.[0]?.bytesBase64Encoded) {
+          const buffer = Buffer.from(data.predictions[0].bytesBase64Encoded, 'base64');
+          fs.writeFileSync(path.join(outputDir, 'hero.webp'), buffer);
+          log('Bild generiert (Imagen 3)');
+          return true;
+        }
+      }
+
+      // Fallback: Gemini native image gen
+      const response2 = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: photoPrompt }] }],
+            generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
+          })
+        }
+      );
+
+      if (response2.ok) {
+        const data = await response2.json();
         if (data.candidates?.[0]?.content?.parts) {
           for (const part of data.candidates[0].content.parts) {
             if (part.inlineData) {
               const buffer = Buffer.from(part.inlineData.data, 'base64');
               fs.writeFileSync(path.join(outputDir, 'hero.webp'), buffer);
-              log('Bild generiert (Gemini)');
+              log('Bild generiert (Gemini Flash)');
               return true;
             }
           }
         }
       }
-      log('Gemini: Kein Bild in Antwort, versuche Fallback...');
+      log('Gemini: Kein Bild generiert, versuche Fallback...');
     } catch (e) {
       log(`Gemini fehlgeschlagen: ${e.message}, versuche Fallback...`);
     }
@@ -290,10 +307,11 @@ async function generateImage(topic, outputDir) {
 
       const imgResponse = await openai.images.generate({
         model: 'dall-e-3',
-        prompt: `Professional sailing photography for a blog. ${topic.image_prompt}. Bright coastal colors, ocean blue and golden hour light. Wide format, magazine quality. No text.`,
+        prompt: photoPrompt,
         n: 1,
         size: '1792x1024',
-        quality: 'standard'
+        quality: 'hd',
+        style: 'natural'
       });
 
       const imageUrl = imgResponse.data[0].url;
@@ -377,7 +395,7 @@ function buildPostHTML(topic, article) {
   let relatedHtml = '';
   const related = posts.filter(p => p.slug !== topic.slug).slice(-3);
   if (related.length > 0) {
-    relatedHtml = '<div style="margin-top: 48px; border-top: 2px solid var(--border); padding-top: 40px;"><h2 style="font-family: var(--font-heading);">Das koennte dich auch interessieren</h2><div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-top: 24px;">';
+    relatedHtml = '<div style="margin-top: 64px; border-top: 1px solid var(--border); padding-top: 48px;"><h2 style="font-family: var(--font-display); font-weight: 400;">Das koennte dich auch interessieren</h2><div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-top: 28px;">';
     related.forEach(p => {
       relatedHtml += buildCardHTML(p, false);
     });
@@ -415,13 +433,15 @@ function buildPostHTML(topic, article) {
 function buildCardHTML(post, featured = false) {
   const cls = featured ? 'card card-featured fade-in' : 'card fade-in';
   return `<div class="${cls}">
-    <img class="card-image" src="${BASE_URL}/posts/${post.slug}/hero.webp" alt="${post.imageAlt || post.title}" loading="lazy" width="600" height="220">
+    <div class="card-img-wrap">
+      <img class="card-image" src="${BASE_URL}/posts/${post.slug}/hero.webp" alt="${post.imageAlt || post.title}" loading="lazy" width="600" height="240">
+    </div>
     <div class="card-body">
       <span class="card-category">${CATEGORIES[post.category]?.name || post.category}</span>
       <h3 class="card-title"><a href="${BASE_URL}/posts/${post.slug}/">${post.title}</a></h3>
       <p class="card-excerpt">${post.metaDescription}</p>
       <div class="card-meta">
-        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> ${post.readTime} Min.</span>
+        <span>${post.readTime} Min. Lesezeit</span>
         <span>${post.dateDisplay}</span>
       </div>
     </div>
@@ -446,15 +466,16 @@ function rebuildIndex() {
 
   // Build category cards
   let categoryCards = '';
+  let catIdx = 1;
   for (const [slug, cat] of Object.entries(CATEGORIES)) {
     const count = posts.filter(p => p.category === slug).length;
-    categoryCards += `<div class="card fade-in" style="text-align:center; padding: 32px;">
-      <div class="card-body">
-        <h3 class="card-title"><a href="${BASE_URL}/kategorie/${slug}/">${cat.name}</a></h3>
-        <p class="card-excerpt">${cat.desc}</p>
-        <span class="card-meta" style="justify-content:center;">${count} Artikel</span>
-      </div>
-    </div>`;
+    categoryCards += `<a class="cat-card fade-in" href="${BASE_URL}/kategorie/${slug}/">
+      <div class="cat-card-num">${String(catIdx).padStart(2, '0')}</div>
+      <h3>${cat.name}</h3>
+      <p>${cat.desc}</p>
+      <span class="cat-card-count">${count} Artikel</span>
+    </a>`;
+    catIdx++;
   }
 
   // Build index

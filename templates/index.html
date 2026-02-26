@@ -46,9 +46,10 @@
   <nav class="nav">
     <div class="nav-inner">
       <a href="{{BASE_URL}}/" class="nav-logo">
-        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M16 4 L16 28 M16 4 C16 4 28 12 28 20 L16 20" fill="none"/>
-          <path d="M4 28 L28 28" stroke-linecap="round"/>
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M16 4 L16 28"/>
+          <path d="M16 4 C16 4 28 12 28 20 L16 20"/>
+          <path d="M4 28 L28 28"/>
         </svg>
         Segeln Lernen
       </a>
@@ -62,45 +63,44 @@
         <li><button class="theme-toggle" aria-label="Design wechseln"></button></li>
       </ul>
       <button class="nav-toggle" aria-label="Menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
       </button>
     </div>
   </nav>
 
-  <!-- Hero Section -->
+  <!-- Hero -->
   <section class="hero">
     <div class="hero-bg"></div>
     <canvas class="wave-canvas"></canvas>
     <div class="hero-content">
-      <h1>Segeln lernen mit Leidenschaft</h1>
-      <p>Praxistipps, Revierguides und Segelwissen von Kapitaen Hannes -- fuer alle, die den Wind im Haar und das Meer im Herzen tragen.</p>
-      <a href="#posts" class="hero-cta">Neueste Artikel entdecken &darr;</a>
+      <div class="hero-eyebrow">Seit 2006 auf See</div>
+      <h1>Segeln lernen mit <em>Leidenschaft</em></h1>
+      <p class="hero-sub">Praxistipps, Revierguides und Segelwissen von Kapitaen Hannes -- fuer alle, die den Wind im Haar und das Meer im Herzen tragen.</p>
+      <a href="#posts" class="hero-cta">Artikel entdecken &darr;</a>
     </div>
   </section>
 
-  <!-- Wave Divider -->
-  <div class="wave-divider">
-    <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
-      <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,40 1440,40 L1440,80 L0,80 Z" fill="var(--bg)"/>
-    </svg>
-  </div>
-
-  <!-- Posts Section -->
+  <!-- Posts -->
   <main class="section" id="posts">
-    <h2 class="section-title">Neueste Artikel</h2>
-    <p class="section-subtitle">Frisches Segelwissen direkt auf deinen Bildschirm</p>
+    <div class="section-header">
+      <div class="section-eyebrow">Journal</div>
+      <h2 class="section-title">Neueste Artikel</h2>
+      <p class="section-subtitle">Frisches Segelwissen, direkt auf deinen Bildschirm</p>
+    </div>
 
     <div class="card-grid">
       {{POST_CARDS}}
     </div>
   </main>
 
-  <!-- Categories Section -->
-  <section style="background: var(--bg-alt); padding: 60px 0;">
-    <div class="section" style="padding-top: 0; padding-bottom: 0;">
-      <h2 class="section-title" style="text-align: center;">Themen erkunden</h2>
-      <p class="section-subtitle" style="text-align: center;">Finde genau das Segelwissen, das du suchst</p>
-      <div class="card-grid" style="grid-template-columns: repeat(3, 1fr);">
+  <!-- Categories -->
+  <section class="categories-strip">
+    <div style="max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px,3vw,48px);">
+      <div class="section-header" style="text-align: center;">
+        <div class="section-eyebrow" style="justify-content: center; display: flex;">Themen</div>
+        <h2 class="section-title">Erkunde die Welt des Segelns</h2>
+      </div>
+      <div class="cat-grid">
         {{CATEGORY_CARDS}}
       </div>
     </div>
@@ -112,7 +112,7 @@
       <div>
         <h3>Segeln Lernen</h3>
         <p>Dein Ratgeber fuer Wind und Wellen. Geschrieben von Kapitaen Hannes mit ueber 20 Jahren Segelerfahrung auf allen Weltmeeren.</p>
-        <p style="margin-top: 12px; font-size: 0.82rem; opacity: 0.6;">Redaktionell mit KI-Unterstuetzung erstellt und von erfahrenen Seglern geprueft.</p>
+        <p style="margin-top: 16px; font-size: 0.78rem; opacity: 0.4;">Redaktionell mit KI-Unterstuetzung erstellt und von erfahrenen Seglern geprueft.</p>
       </div>
       <div>
         <h3>Kategorien</h3>
@@ -134,12 +134,12 @@
       </div>
     </div>
     <div class="footer-bottom">
-      &copy; {{YEAR}} Segeln Lernen. Alle Rechte vorbehalten.
+      &copy; {{YEAR}} Segeln Lernen &middot; Fair winds and following seas
     </div>
   </footer>
 
   <button class="scroll-top" aria-label="Nach oben scrollen">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
   </button>
 
   <script src="{{BASE_URL}}/js/waves.js"></script>
