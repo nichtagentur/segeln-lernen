@@ -373,6 +373,7 @@ a:hover { color: var(--sunset); }
 
 .section-header {
   margin-bottom: 64px;
+  text-align: center;
 }
 
 .section-eyebrow {
@@ -383,6 +384,10 @@ a:hover { color: var(--sunset); }
   text-transform: uppercase;
   color: var(--ocean);
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
 .section-title {

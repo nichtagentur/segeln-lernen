@@ -32,7 +32,7 @@ const OPENAI_KEY = process.env.OPENAI_API_KEY;
 // Email config
 const SMTP_HOST = 'mail.easyname.eu';
 const SMTP_PORT = 587;
-const SMTP_USER = 'ai-assistent@nichtagentur.at';
+const SMTP_USER = 'i-am-a-user@nichtagentur.at';
 const SMTP_PASS = process.env.EMAIL_PASSWORD || 'i_am_an_AI_password_2026';
 const NOTIFY_EMAIL = 'keller@blaugrau.at';
 
@@ -285,7 +285,7 @@ Antworte AUSSCHLIESSLICH mit einem JSON-Objekt (kein Markdown, kein Text drumher
   "corrections": ["Korrektur 1 falls noetig"],
   "verified": true
 }` }] }],
-          tools: [{ googleSearchRetrieval: {} }],
+          tools: [{ google_search: {} }],
           generationConfig: { temperature: 0.1 }
         })
       }
@@ -474,7 +474,7 @@ Antworte AUSSCHLIESSLICH mit einem JSON-Objekt:
   "url": "https://www.amazon.de/dp/XXXXXXXXXX",
   "recommendation": "Ein kurzer Satz warum das zum Artikel passt, im Ton eines alten Seemanns"
 }` }] }],
-          tools: [{ googleSearchRetrieval: {} }],
+          tools: [{ google_search: {} }],
           generationConfig: { temperature: 0.3 }
         })
       }
@@ -987,7 +987,7 @@ Anfang: ${article.content.substring(0, 800)}`
     });
 
     await transporter.sendMail({
-      from: `"Segeln Lernen Bot" <${SMTP_USER}>`,
+      from: `"Segeln Lernen Bot" <i-am-a-user@nichtagentur.at>`,
       to: NOTIFY_EMAIL,
       subject: `Neuer Artikel: ${topic.title}`,
       html: `
