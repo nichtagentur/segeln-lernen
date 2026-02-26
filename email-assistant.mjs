@@ -595,13 +595,12 @@ Antworte NUR mit JSON:
   fs.writeFileSync(path.join(DATA, 'posts.json'), JSON.stringify(posts, null, 2));
   fs.writeFileSync(path.join(DATA, 'topics-used.json'), JSON.stringify(topicsUsed, null, 2));
 
-  // Rebuild index (call the main script's rebuild)
-  execSync('source ~/.env && node -e "import(\'./generate-post.mjs\')" 2>/dev/null; node -e "' +
-    'import fs from \'fs\'; import path from \'path\';' +
-    'const baseCss = fs.readFileSync(\'templates/base.css\',\'utf-8\');' +
-    'const widgetsCss = fs.readFileSync(\'templates/widgets.css\',\'utf-8\');' +
-    'fs.writeFileSync(\'docs/css/style.css\', baseCss + \'\\n\' + widgetsCss);' +
-    '"', { cwd: ROOT, stdio: 'pipe', shell: '/bin/bash' });
+  // Rebuild CSS
+  const baseCss = fs.readFileSync(path.join(TEMPLATES, 'base.css'), 'utf-8');
+  let widgetsCss = '';
+  try { widgetsCss = fs.readFileSync(path.join(TEMPLATES, 'widgets.css'), 'utf-8'); } catch {}
+  fs.mkdirSync(path.join(DOCS, 'css'), { recursive: true });
+  fs.writeFileSync(path.join(DOCS, 'css', 'style.css'), baseCss + '\n' + widgetsCss);
 
   // Simple index rebuild
   rebuildAll(posts);
